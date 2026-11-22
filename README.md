@@ -1,38 +1,35 @@
 # Apple UI Components
 
-**کیتِ کامپوننت برای ساختِ اپلیکیشن‌های مولتی‌پلتفرم** — یک بار طراحی، دو جا اجرا: وب (HTML/CSS/ES module) و فلاتر (۲۱ ویجت).
+سلام 👋 این یه کیتِ کامپوننته برای ساختنِ اپ‌هایی که می‌خوان شبیه iOS و macOS دیده بشن — هم روی وب، هم روی فلاتر.
 
-بدون وابستگی، بدون بیلد استپ، بدون فریم‌ورک. یازده کامپوننت با **یک فایلِ توکن** که هر دو طرف از آن می‌خوانند، پس نمونه‌ی وب و بیلدِ نیتیو از هم جدا نمی‌افتند.
+فکرِ اصلیش ساده‌ست: یه بار طراحی می‌کنی، دو جا جواب می‌گیری. وب با HTML/CSS و دو تا فایل جاوااسکریپت، فلاتر با یه پکیجِ آماده. هیچ وابستگی و بیلد استپی هم در کار نیست — فایل‌ها رو بریز تو پروژه و شروع کن.
 
 ---
 
-## چه چیزی داخلش هست
+## چی داخلشه؟
 
 | کامپوننت | وب | فلاتر |
 |---|---|---|
-| Dynamic Island (۵ حالت) | `.island` + `island.js` | — (فعلاً وب) |
-| Liquid glass | `.glass-stage` / `.glass-panel` | `IosGlass` |
-| سوییچ iOS 27 | `.sw` (`role="switch"`) | `IosSwitch` |
-| کنترل سگمنت | `.seg` + `.thumb` | `IosSegmentedControl` |
-| لیست و ردیف تنظیمات | `.glass-row` | `IosListSection` / `IosListTile` |
-| پنجره macOS 11 | `.macwin` + `.macbar` / `.macsidebar` / `.macrow` | `MacWindow` / `MacSidebar` / `MacListRow` |
-| شیت، نویگیشن، تب‌بار، دکمه، اسلایدر، جست‌وجو | — | `IosSheet` / `IosNavBar` / `IosTabBar` / `IosButton` / `MacSlider` / `*SearchField` |
-| ریویل روی اسکرول | `[data-reveal]` + `--d` | — |
+| اون جزیره‌ی بالای صفحه (Dynamic Island) با ۵ حالت | `.island` + `island.js` | — (فعلاً فقط وب) |
+| شیشه‌ی مات و بلور (liquid glass) | `.glass-stage` / `.glass-panel` | `IosGlass` |
+| کلیدِ روشن/خاموشِ iOS | `.sw` | `IosSwitch` |
+| کنترلِ چندتایی (Segmented) | `.seg` | `IosSegmentedControl` |
+| ردیف‌های تنظیمات | `.glass-row` | `IosListSection` / `IosListTile` |
+| پنجره‌ی macOS | `.macwin` | `MacWindow` / `MacSidebar` / `MacListRow` |
+| شیت، نوار بالا، تب‌بار، دکمه، اسلایدر، جست‌وجو | — | `IosSheet` · `IosNavBar` · `IosTabBar` · `IosButton` · `MacSlider` · `*SearchField` |
 
-نسخه‌ی وب: **۴ فایل** (`fonts.css` · `tokens.css` · `components.css` · `island.js` + `controls.js`).
-نسخه‌ی فلاتر: پکیجِ `apple_ui_kit` با ۲۱ اکسپورت (۲۲ کلاسِ ویجت به‌همراهِ توکن‌ها)، یک صفحه‌ی `example/` و **۱۴ تست**.
+سمتِ فلاتر در کل **۲۱ تا ویجت** داره، با یه صفحه‌ی نمونه و ۱۴ تست که همه‌شون سبزن.
 
----
+## سریع شروع کنیم — وب
 
-## شروع سریع — وب
+سه تا فایل CSS رو لینک کن و دو تا تابع رو صدا بزن. همین:
 
 ```html
 <link rel="stylesheet" href="web/components/fonts.css">
 <link rel="stylesheet" href="web/components/tokens.css">
 <link rel="stylesheet" href="web/components/components.css">
 
-<div class="island" data-island data-state="idle" role="button" tabindex="0"
-     aria-label="در حال پخش">
+<div class="island" data-island data-state="idle" role="button" tabindex="0" aria-label="در حال پخش">
   <span class="layer" data-for="idle"><i class="dot"></i></span>
   <span class="layer" data-for="expanded">…</span>
 </div>
@@ -40,27 +37,33 @@
 <script type="module">
   import { boot } from './web/components/island.js';
   import { bootControls } from './web/components/controls.js';
-  boot();          // همه‌ی [data-island] ها را بالا می‌آورد
-  bootControls();  // همه‌ی .sw و .seg ها را
+
+  boot();          // همه‌ی جزیره‌ها رو راه می‌ندازه
+  bootControls();  // همه‌ی کلیدها و کنترل‌ها رو
 </script>
 ```
 
-حتماً روی HTTP سرو کن (`python3 -m http.server 8000`) — فایل‌ها ES module هستند و `file://` کار نمی‌کند.
+**یه نکته‌ی مهم:** حتماً روی یه سرورِ محلی بازش کن، نه با دابل‌کلیک روی فایل. چون ماژول‌های جاوااسکریپت با `file://` بالا نمیان. کافیه:
 
-**API:**
-
-```js
-const island = new DynamicIsland(el, { initial: 'idle', group: 'dock', intro: true });
-island.set('expanded');           // idle | compact | expanded | notif | call
-island.cycle();                   // compact → expanded → idle
-island.playIntro();               // نمایشِ خودکارِ معرفی
-island.on('change', (s) => {});   // مشترک شو
-island.destroy();                 // در unmount فراموش نشود
+```bash
+python3 -m http.server 8000
+# بعد برو روی http://localhost:8000/web/showcase.html
 ```
 
-دو آیلند با `data-island-group` یکسان هم‌زمان عوض می‌شوند.
+### جزیره رو چطور کنترل کنم؟
 
-## شروع سریع — فلاتر
+```js
+const island = new DynamicIsland(el);
+
+island.set('expanded');  // idle | compact | expanded | notif | call
+island.cycle();          // یه دور می‌چرخه: compact → expanded → idle
+island.on('change', (state) => console.log(state));  // هر وقت عوض شد خبر می‌ده
+island.destroy();        // وقتی از صفحه برداشتیش، این رو هم صدا بزن
+```
+
+اگه دو تا جزیره داشتی و خواستی هم‌زمان حرکت کنن، به هر دو یه `data-island-group` یکسان بده.
+
+## و فلاتر
 
 ```yaml
 dependencies:
@@ -75,57 +78,51 @@ IosGlass(
     children: <Widget>[
       IosListTile(
         title: 'صدای فضایی',
-        trailing: IosSwitch(value: spatial, onChanged: (bool v) => setState(() => spatial = v)),
+        trailing: IosSwitch(
+          value: spatial,
+          onChanged: (bool v) => setState(() => spatial = v),
+        ),
       ),
     ],
   ),
 )
 ```
 
-`flutter analyze` و `flutter test` بخشی از قرارداد است، نه پیشنهاد.
+قیافه‌ی ویجت‌ها با `flutter analyze` و `flutter test` چک می‌شه — هر دو تا الان تمیز رد می‌شن.
 
 ---
 
-## یک منبعِ حقیقت برای توکن‌ها
+## می‌خوای رنگ و اندازه‌ها رو عوض کنی؟
 
-| CSS | مقدار | فلاتر |
-|---|---|---|
-| `--t-base` | 260ms | `AppleDuration.base` |
-| `--ease-spring` | `cubic-bezier(.34,1.42,.64,1)` | `AppleCurves.spring` |
-| `--ios-card-r` | 26px | `AppleMetrics.cardRadius` |
-| `--ios-sw-w/h` | 51 × 31 | `AppleMetrics.switchWidth/Height` |
-| `--glass-blur` | 28px | `AppleMetrics.glassBlur` |
-| `--mac-win-r` | 10px | `MacMetrics.windowRadius` |
+همه‌چیز توی یه فایلِ کوچیکه: `web/components/tokens.css`. یه سری متغیر ساده، مثل `--ios-card-r` یا `--glass-blur`. همون عددها توی فلاتر هم هستن، با اسم‌های `AppleMetrics.cardRadius` و `AppleMetrics.glassBlur`.
 
-جدولِ کامل: [`references/tokens.md`](references/tokens.md). قاعده ساده است: عدد را که عوض کردی، **در همان کامیت** طرفِ دیگر را هم عوض کن.
+قاعده‌ش اینه: عددی رو که عوض کردی، تو همون کامیت طرفِ دیگه‌ش رو هم عوض کن. وگرنه وب و فلاتر کم‌کم از هم دور می‌شن و تا وقتی دو تا اسکرین‌شات رو کنارِ هم نذاری متوجه نمی‌شی.
 
-## پنج قاعده‌ای که این کیت روی آن ایستاده
+## چهار تا قانون که این کیت روش ایستاده
 
-1. **یک مقیاس توکن، دو پلتفرم.**
-2. **حرکت فقط با `transform` و `opacity`** — ۱۸۰/۲۶۰/۴۲۰/۵۶۰ میلی‌ثانیه، اسپرینگ برای ورود، استگر ۴۵ms با سقفِ ۸ آیتم. تنها استثنا اندازه‌ی خودِ جزیره است، با `contain: layout paint style`.
-3. **شیشه باید چیزی برای بلور داشتن داشته باشد** — پنل روی پس‌زمینه‌ی نزدیک به سیاه، خاکستری دیده می‌شود؛ رنگ را پشتش بگذار و بلور را کلیپ کن.
-4. **هیچ کامپوننتی اندازه‌ی کانتینرِ خودش را نمی‌داند** — کلیمپ روی `--island-max` است، نه `100vw` تنها (علتِ کلاسیکِ ۲۰ پیکسل اسکرول افقی روی موبایل).
-5. **متنِ فارسی هرگز با فونتِ لاتین رندر نمی‌شود** — `--ui` فقط لاتین است، فارسی می‌رود در `--fa` (وزیرمتن، OFL).
+1. **حرکت فقط با `transform` و `opacity`.** سرعت‌ها ۱۸۰ / ۲۶۰ / ۴۲۰ / ۵۶۰ میلی‌ثانیه‌ست. تنها استثنا اندازه‌ی خودِ جزیره‌ست، که با `contain` مهار شده تا بقیه‌ی صفحه تکون نخوره.
+2. **شیشه برای اینکه شیشه دیده بشه، باید پشتش چیزی باشه.** پنلِ مات روی پس‌زمینه‌ی تیره، شبیه یه کارتِ خاکستری می‌شه؛ اول یه لایه رنگ بذار پشتش، بعد بلور رو کلیپ کن.
+3. **هیچ کامپوننتی نمی‌دونه توی چه عرضی نشسته.** برای همین جزیره روی `--island-max` کلیمپ می‌شه، نه روی `100vw` تنها. همین یه چیز، بیشترِ اسکرولِ افقیِ ناخواسته روی موبایل رو حل می‌کنه.
+4. **متنِ فارسی هیچ‌وقت با فونتِ لاتین نوشته نمی‌شه.** فونتِ رابط (`--ui`) فقط لاتینه؛ فارسی می‌ره روی `--fa`، یعنی Vazirmatn.
 
-## دمو
-
-`web/showcase.html` — همه‌ی کامپوننت‌ها با مارک‌آپ و API کنارشان:
+## امتحانش کن
 
 ```bash
-npm run serve      # http://localhost:8000/web/showcase.html
+npm install && npm test                                      # وب
+cd flutter/apple_ui_kit && flutter analyze && flutter test   # فلاتر
 ```
 
-## تست
+آخرین باری که چک کردم: تست‌های وب سبز، ۱۴ تستِ فلاتر سبز، و توی کروم روی ۱۴۴۰ و ۳۹۰ پیکسل هیچ اسکرولِ افقی، هیچ خطای کنسول و هیچ فایلِ گم‌شده‌ای نبود.
 
-```bash
-npm install && npm test                                      # jsdom — آیلند، کنترل‌ها، id ها، توکن‌ها
-cd flutter/apple_ui_kit && flutter analyze && flutter test   # ۱۴ تست ویجت
-```
+دموی همه‌ی کامپوننت‌ها: `web/showcase.html` — کنارِ هر کامپوننت، مارک‌آپ و کدِ استفاده‌ش نوشته شده.
 
-وضعیتِ فعلی: هر دو سبز. در کرومِ هدلس روی ۱۴۴۰ و ۳۹۰ پیکسل هم: `overflow-x: 0`، فونت‌ها لود، صفر خطای کنسول، صفر ۴۰۴.
+## اجازه‌ها (لایسنس)
 
-## مجوزها
+- کد: MIT، راحت استفاده کن
+- فونت Vazirmatn: OFL 1.1، داخل ریپو هست
+- فونت‌های Fontshare: استفاده‌شون آزاده ولی **نمی‌شه بازتوزیع کرد**؛ برای همین توی ریپو نیستن و با `python3 scripts/fetch-fonts.py` خودت دانلودشون می‌کنی
+- فونت SF Pro: اصلاً باندل نمی‌شه، فقط اسمش به‌عنوان fallback ذکر شده
 
-کد: MIT · وزیرمتن: OFL 1.1 (کامیت‌شده) · فونت‌های Fontshare: مجاز به استفاده، **غیرمجاز به بازتوزیع** — با `scripts/fetch-fonts.py` گرفته می‌شوند و در `.gitignore` هستند · SF Pro هرگز باندل نمی‌شود. جزئیات: [`LICENSES.md`](LICENSES.md).
+هیچ فونت یا آیکون یا تصویری از خودِ اپل توی این ریپو نیست؛ فقط زبانِ طراحی‌ش الگو گرفته شده.
 
-هیچ فونت، آیکون یا تصویری از اپل در این مخزن نیست؛ فقط زبانِ طراحی ارجاع داده شده است.
+بیشتر بخوای: پوشه‌ی [`references/`](references) — هر سند یه موضوع: جزیره، شیشه، حرکت، توکن‌ها، وب، فلاتر و یه چک‌لیستِ ۱۸ موردی برای قبل از انتشار.
