@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08080a">
+<title>Aurora UI components — web kit</title>
+<meta name="description" content="Web components for cross-platform apps: a five-state dynamic island, liquid glass surfaces, iOS 27 controls and a macOS window — token-driven, dependency-free, 60fps.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2308080a'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%2322d3ee'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="components/fonts.css">
+<link rel="stylesheet" href="components/tokens.css">
+<link rel="stylesheet" href="components/components.css">
+<style>
+/* Showcase-only layout. None of this ships as a component. */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--ink);color:var(--text);
+  font-family:var(--fa);line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+code,pre{font-family:var(--mono)}
+.wrap{width:100%;max-width:1080px;margin-inline:auto;padding-inline:clamp(18px,4vw,40px)}
+header.top{
+  position:sticky;top:0;z-index:20;
+  background:rgba(8,8,10,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line-soft);
+}
+header.top .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--en);font-size:1.05rem}
+.logo .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(140deg,var(--violet),var(--cyan))}
+header.top nav{display:flex;gap:2px;margin-inline-start:auto}
+header.top nav a{font-size:.82rem;color:var(--text-dim);padding:7px 10px;border-radius:999px}
+header.top nav a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+/* on a phone the section links become one swipeable row instead of vanishing */
+@media (max-width:640px){
+  header.top .wrap{flex-wrap:wrap;height:auto;padding-block:8px 0;row-gap:2px}
+  header.top nav{
+    order:3;flex-basis:100%;margin-inline-start:0;
+    overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
+    -webkit-overflow-scrolling:touch;padding-bottom:6px;
+  }
+  header.top nav::-webkit-scrollbar{display:none}
+  header.top nav a{padding:6px 8px;font-size:.78rem;white-space:nowrap}
+}
+
+.intro{padding-block:clamp(40px,7vw,76px) 8px}
+.intro h1{
+  font-family:var(--fa);font-weight:700;margin:0 0 10px;
+  font-size:clamp(1.7rem,4.4vw,2.7rem);line-height:1.25;letter-spacing:0;
+  max-width:24ch;text-wrap:balance;
+}
+.intro p{color:var(--text-dim);margin:0;max-width:62ch;font-size:1rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:6px 11px;border-radius:999px;border:1px solid var(--line);
+  color:var(--text-dim);background:var(--glass);
+}
+
+section.comp-block{padding-block:clamp(36px,5vw,60px);border-top:1px solid var(--line-soft)}
+/* the header is sticky and grows on a phone: anchor jumps must clear it */
+section.comp-block[id]{scroll-margin-top:78px}
+@media (max-width:640px){section.comp-block[id]{scroll-margin-top:112px}}
+section.comp-block:first-of-type{border-top:0}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:6px}
+.head h2{margin:0;font-size:clamp(1.15rem,2.4vw,1.5rem);font-weight:700}
+.head .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan)}
+.head .cls{font-family:var(--mono);font-size:.68rem;color:var(--text-faint);margin-inline-start:auto}
+.desc{color:var(--text-dim);font-size:.92rem;margin:0 0 20px;max-width:64ch}
+
+.stage{
+  border:1px solid var(--line-soft);border-radius:22px;padding:clamp(16px,3vw,28px);
+  background:
+    radial-gradient(60% 80% at 12% 0%,rgba(124,58,237,.22),transparent 62%),
+    radial-gradient(50% 70% at 92% 100%,rgba(34,211,238,.16),transparent 62%),
+    #0b0b11;
+  display:grid;gap:18px;min-width:0;
+}
+.stage > *{min-width:0}
+.two > *{min-width:0}
+.stage.center{place-items:center}
+.stage-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.row-actions{display:flex;flex-wrap:wrap;gap:8px}
+.state-btn{
+  font-family:var(--ui);font-size:.78rem;padding:8px 13px;border-radius:999px;
+  border:1px solid var(--line);background:var(--glass);color:var(--text-dim);
+  cursor:pointer;transition:background 180ms,color 180ms,transform 180ms cubic-bezier(.34,1.42,.64,1);
+}
+.state-btn:hover{color:var(--text);background:var(--glass-strong);transform:translateY(-1px)}
+.state-btn[aria-pressed="true"]{
+  color:#08080a;font-weight:700;border-color:transparent;
+  background:linear-gradient(135deg,#c4b5fd,#8be9ff);
+}
+.snippet{
+  margin:0;padding:14px 16px;border-radius:14px;overflow:auto;
+  min-width:0;max-width:100%;   /* a grid child without min-width:0 stretches the track */
+  background:#05050a;border:1px solid var(--line-soft);
+  font-size:.72rem;line-height:1.75;color:#c9c9d4;
+}
+.snippet .k{color:#8be9ff}
+.snippet .s{color:#d9f99d}
+.hint{font-size:.78rem;color:var(--text-faint);margin:8px 0 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+
+@media (max-width:560px){
+  /* the island clamps against 100vw by default; inside a padded stage that is
+     too optimistic, so hand it the real gutter */
+  .stage{--island-max:calc(100vw - 76px)}
+}
+
+/* motion helpers used by the demo cards only */
+.demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:14px}
+.demo-card{
+  padding:16px;border-radius:18px;border:1px solid var(--line-soft);
+  background:rgba(255,255,255,.04);display:grid;gap:10px;justify-items:center;
+  transition:transform 260ms cubic-bezier(.34,1.42,.64,1);
+}
+.demo-card b{justify-self:start;font-size:.84rem}
+.demo-card small{justify-self:start;color:var(--text-faint);font-size:.74rem}
+.demo-card .slot{height:78px;display:grid;place-items:center;width:100%}
+.magnet{
+  width:100px;height:42px;border-radius:999px;display:grid;place-items:center;font-weight:800;font-size:.8rem;
+  background:linear-gradient(135deg,#c4b5fd,#8be9ff);color:#08080a;
+  transition:transform 320ms cubic-bezier(.34,1.42,.64,1);
+}
+.counter{font-family:var(--en);font-size:2.2rem;line-height:1}
+.blob{
+  width:68px;height:68px;border-radius:44% 56% 62% 38%/48% 42% 58% 52%;
+  background:conic-gradient(from 90deg,#7c3aed,#22d3ee,#a3e635,#7c3aed);
+  animation:morph 9s cubic-bezier(.22,.61,.36,1) infinite alternate;
+}
+footer.bot{border-top:1px solid var(--line-soft);padding-block:26px 44px;color:var(--text-faint);font-size:.78rem}
+footer.bot a{color:var(--text-dim)}
+footer.bot a:hover{color:var(--text)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.82rem;color:var(--text-dim);margin:0}
+.kv b{font-family:var(--mono);font-size:.68rem;color:var(--cyan);font-weight:500}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="logo"><span class="dot"></span>Aurora UI</span>
+    <nav>
+      <a href="#island">Island</a>
+      <a href="#glass">Glass</a>
+      <a href="#controls">Controls</a>
+      <a href="#macos">macOS</a>
+      <a href="#motion">Motion</a>
+      <a href="../flutter/apple_ui_kit/README.md">Flutter</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="intro">
+    <h1>Web components for cross-platform apps</h1>
+    <p>
+      Four components, one token file, no dependencies: a five-state dynamic island,
+      liquid-glass surfaces, the iOS 27 controls and a macOS 11 window. The same
+      numbers drive the Flutter widgets in <code>flutter/apple_ui_kit</code>, so a web
+      prototype and a native build stay in step.
+    </p>
+    <div class="chips">
+      <span class="chip">0 dependencies</span>
+      <span class="chip">transform + opacity only</span>
+      <span class="chip">RTL-safe</span>
+      <span class="chip">reduced-motion aware</span>
+      <span class="chip">web + flutter</span>
+    </div>
+    <p class="hint">Serve this folder over HTTP (<code>python3 -m http.server 8000</code>) — the island module is an ES module.</p>
+  </section>
+
+  <!-- ─────────────────────────  island  ───────────────────────── -->
+  <section class="comp-block" id="island">
+    <div class="head">
+      <h2>Dynamic island</h2>
+      <span class="tag">5 states</span>
+      <span class="cls">.island · island.js</span>
+    </div>
+    <p class="desc">
+      One black pill that morphs between idle, compact, expanded, notification and call.
+      Only the pill animates width and height; its five layers cross-fade with opacity and
+      scale. Click it, or drive it from the buttons.
+    </p>
+    <div class="stage">
+      <div class="stage center">
+        <div class="island" data-island data-state="idle" data-island-group="showcase"
+             aria-label="Dynamic island demo">
+          <div class="layer" data-for="idle">
+            <div class="i-idle"><span class="pulse"></span><span class="t">READY</span></div>
+          </div>
+          <div class="layer" data-for="compact">
+            <div class="i-compact">
+              <span class="wave"><i></i><i></i><i></i><i></i><i></i></span>
+              <span class="txt"><b>Midnight Glass</b><small>AURORA · 02:14</small></span>
+            </div>
+          </div>
+          <div class="layer" data-for="expanded">
+            <div class="art"></div>
+            <div class="body">
+              <div class="t1"><b>Midnight Glass</b><span class="src">AURORA</span></div>
+              <small>Liquid Motion · 2026</small>
+              <div class="bar-track"><div class="bar-fill"></div></div>
+              <div class="controls">
+                <button type="button" tabindex="-1" aria-label="Previous">⏮</button>
+                <button type="button" tabindex="-1" class="play" aria-label="Play">▶</button>
+                <button type="button" tabindex="-1" aria-label="Next">⏭</button>
+                <span class="eq"><i></i><i></i><i></i></span>
+              </div>
+            </div>
+          </div>
+          <div class="layer" data-for="notif">
+            <div class="i-notif">
+              <span class="ic">✦</span>
+              <span class="tx"><b>Aurora</b><small>72 components are ready</small></span>
+            </div>
+          </div>
+          <div class="layer" data-for="call">
+            <div class="i-call">
+              <span class="who"><span class="av"></span><b>Nima · mobile</b></span>
+              <span class="row-btns"><span class="yes">✓</span><span class="no">✕</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="state-btn" data-island-state="idle" aria-pressed="true">idle · 124×35</button>
+        <button class="state-btn" data-island-state="compact" aria-pressed="false">compact · 216×38</button>
+        <button class="state-btn" data-island-state="expanded" aria-pressed="false">expanded · 344×126</button>
+        <button class="state-btn" data-island-state="notif" aria-pressed="false">notif · 322×62</button>
+        <button class="state-btn" data-island-state="call" aria-pressed="false">call · 300×56</button>
+      </div>
+      <pre class="snippet"><code><span class="k">&lt;link</span> rel=<span class="s">"stylesheet"</span> href=<span class="s">"components/tokens.css"</span><span class="k">&gt;</span>
+<span class="k">&lt;link</span> rel=<span class="s">"stylesheet"</span> href=<span class="s">"components/components.css"</span><span class="k">&gt;</span>
+
+<span class="k">&lt;div</span> class=<span class="s">"island"</span> data-island data-state=<span class="s">"idle"</span><span class="k">&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"layer"</span> data-for=<span class="s">"idle"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"layer"</span> data-for=<span class="s">"compact"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"layer"</span> data-for=<span class="s">"expanded"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"layer"</span> data-for=<span class="s">"notif"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"layer"</span> data-for=<span class="s">"call"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/div&gt;</span>
+
+<span class="k">&lt;script</span> type=<span class="s">"module"</span><span class="k">&gt;</span>
+  <span class="k">import</span> { boot } <span class="k">from</span> <span class="s">"./components/island.js"</span>;
+  boot();                       <span class="k">// upgrades every [data-island]</span>
+  <span class="k">//</span> island.set(<span class="s">"expanded"</span>); island.on(<span class="s">"change"</span>, ({ state }) =&gt; {});
+<span class="k">&lt;/script&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────  glass  ───────────────────────── -->
+  <section class="comp-block" id="glass">
+    <div class="head">
+      <h2>Liquid glass</h2>
+      <span class="tag">blur 28</span>
+      <span class="cls">.glass-stage · .glass-panel</span>
+    </div>
+    <p class="desc">
+      A blurred, tinted pane with a hairline stroke and a diagonal sheen. The colour bed
+      behind it is part of the recipe: glass over pure black is just a grey card.
+    </p>
+    <div class="stage">
+      <div class="two">
+        <div class="glass-stage">
+          <div class="glass-panel">
+            <div class="grabber"></div>
+            <div class="glass-row">
+              <div><div class="lbl">Spatial audio</div><div class="sub">On</div></div>
+              <div class="sw" role="switch" aria-checked="true" tabindex="0" aria-label="Spatial audio"></div>
+            </div>
+            <div class="glass-row">
+              <div><div class="lbl">Download quality</div><div class="sub">High</div></div>
+              <span class="mono" style="color:var(--text-faint)">‹</span>
+            </div>
+            <div class="glass-row">
+              <div><div class="lbl">Reduce motion</div><div class="sub">System</div></div>
+              <div class="sw" role="switch" aria-checked="false" tabindex="0" aria-label="Reduce motion"></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <pre class="snippet"><code><span class="k">&lt;div</span> class=<span class="s">"glass-stage"</span><span class="k">&gt;</span>   <span class="k">&lt;!-- colour bed --&gt;</span>
+  <span class="k">&lt;div</span> class=<span class="s">"glass-panel"</span><span class="k">&gt;</span>
+    <span class="k">&lt;div</span> class=<span class="s">"grabber"</span><span class="k">&gt;&lt;/div&gt;</span>
+    <span class="k">&lt;div</span> class=<span class="s">"glass-row"</span><span class="k">&gt;</span>…<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/div&gt;</span>
+
+<span class="k">/* the material itself */</span>
+.glass-panel{
+  backdrop-filter: blur(<span class="s">28px</span>) saturate(<span class="s">1.5</span>);
+  background: rgba(<span class="s">255,255,255,.07</span>);
+  border: <span class="s">1px</span> solid rgba(<span class="s">255,255,255,.16</span>);
+  overflow: hidden;   <span class="k">/* required: an unclipped blur is a full-page cost */</span>
+}</code></pre>
+          <p class="hint">Never stack glass on glass, and never put a blurred pane on every row of a long list.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────  controls  ───────────────────── -->
+  <section class="comp-block" id="controls">
+    <div class="head">
+      <h2>iOS 27 controls</h2>
+      <span class="tag">switch · segmented · rows</span>
+      <span class="cls">.sw · .seg · .glass-row</span>
+    </div>
+    <p class="desc">
+      The switch is 51×31 with a 27 point thumb; the segmented control slides a white
+      thumb under the selection. Both are plain DOM with ARIA, no framework, and they
+      mirror <code>IosSwitch</code> and <code>IosSegmentedControl</code> in the Flutter kit.
+    </p>
+    <div class="stage">
+      <div class="stage-row">
+        <div class="sw" role="switch" aria-checked="true" tabindex="0" aria-label="Demo switch"></div>
+        <div class="seg" role="tablist" aria-label="Demo segmented control">
+          <span class="thumb" aria-hidden="true"></span>
+          <button role="tab" aria-selected="true">All</button>
+          <button role="tab" aria-selected="false">Recent</button>
+          <button role="tab" aria-selected="false">Shared</button>
+        </div>
+      </div>
+      <pre class="snippet"><code><span class="k">&lt;div</span> class=<span class="s">"sw"</span> role=<span class="s">"switch"</span> aria-checked=<span class="s">"true"</span> tabindex=<span class="s">"0"</span><span class="k">&gt;&lt;/div&gt;</span>
+
+<span class="k">&lt;div</span> class=<span class="s">"seg"</span> role=<span class="s">"tablist"</span><span class="k">&gt;</span>
+  <span class="k">&lt;span</span> class=<span class="s">"thumb"</span> aria-hidden=<span class="s">"true"</span><span class="k">&gt;&lt;/span&gt;</span>
+  <span class="k">&lt;button</span> role=<span class="s">"tab"</span> aria-selected=<span class="s">"true"</span><span class="k">&gt;</span>All<span class="k">&lt;/button&gt;</span>
+  <span class="k">&lt;button</span> role=<span class="s">"tab"</span> aria-selected=<span class="s">"false"</span><span class="k">&gt;</span>Recent<span class="k">&lt;/button&gt;</span>
+<span class="k">&lt;/div&gt;</span></code></pre>
+    </div>
+  </section>
+
+  <!-- ─────────────────────  macos  ───────────────────── -->
+  <section class="comp-block" id="macos">
+    <div class="head">
+      <h2>macOS window</h2>
+      <span class="tag">big sur</span>
+      <span class="cls">.macwin · .macbar · .macsidebar</span>
+    </div>
+    <p class="desc">
+      Title bar 38, traffic lights 12 with an 8 px gap, 10 px window radius, a 150 px
+      sidebar and 28 px rows. The whole surface is LTR even on an RTL page, because that
+      is what the window actually does.
+    </p>
+    <div class="stage">
+      <div class="macwin">
+        <div class="macbar">
+          <div class="tl" aria-hidden="true"><i class="c"></i><i class="m"></i><i class="z"></i></div>
+          <div class="title">Documents</div>
+          <span class="mono" style="font-size:.58rem;color:rgba(255,255,255,.4)">⌘K</span>
+        </div>
+        <div class="macbody">
+          <div class="macsidebar">
+            <div class="ttl">Favourites</div>
+            <a href="#macos" aria-current="true">▸ Recents</a>
+            <a href="#macos">▸ Documents</a>
+            <a href="#macos">▸ Downloads <span class="b">3</span></a>
+            <div class="ttl">Locations</div>
+            <a href="#macos">▸ iCloud Drive</a>
+          </div>
+          <div class="macmain">
+            <div class="macrow"><span class="ico"></span><span class="nm">Quarterly review.pdf</span><span class="meta">2.4 MB</span></div>
+            <div class="macrow"><span class="ico"></span><span class="nm">Design system.sketch</span><span class="meta">18 MB</span></div>
+            <div class="macrow"><span class="ico"></span><span class="nm">Motion spec.md</span><span class="meta">12 KB</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────  motion  ───────────────────── -->
+  <section class="comp-block" id="motion">
+    <div class="head">
+      <h2>Motion utilities</h2>
+      <span class="tag">60fps</span>
+      <span class="cls">[data-reveal] · helpers</span>
+    </div>
+    <p class="desc">
+      Reveal on scroll with a 45 ms stagger comes from the component layer
+      (<code>[data-reveal]</code> + <code>style="--d:2"</code>). These four are
+      single-purpose helpers, all transform-only.
+    </p>
+    <div class="stage">
+      <div class="demo-grid">
+        <div class="demo-card" data-tilt>
+          <div class="slot"><span class="mono" style="color:var(--text-faint)">3D TILT</span></div>
+          <b>Card tilt</b><small>pointer → rotateX/Y, max 8°</small>
+        </div>
+        <div class="demo-card">
+          <div class="slot"><div class="magnet" data-magnet>MAGNET</div></div>
+          <b>Magnetic button</b><small>pulls toward the cursor</small>
+        </div>
+        <div class="demo-card">
+          <div class="slot"><div class="counter" data-count="60" data-suffix="fps">0</div></div>
+          <b>Counter</b><small>once, on first view</small>
+        </div>
+        <div class="demo-card">
+          <div class="slot"><div class="blob"></div></div>
+          <b>Morphing blob</b><small>border-radius only</small>
+        </div>
+      </div>
+      <pre class="snippet"><code><span class="k">&lt;div</span> data-reveal style=<span class="s">"--d:2"</span><span class="k">&gt;</span>arrives with a 90ms stagger<span class="k">&lt;/div&gt;</span>
+
+[data-reveal]{opacity:0;transform:translate3d(0,18px,0);
+  transition:opacity 420ms ease-out,transform 420ms var(--spring);
+  transition-delay:calc(var(--d,0) * 45ms)}
+[data-reveal].in{opacity:1;transform:none}</code></pre>
+    </div>
+  </section>
+
+  <section class="comp-block">
+    <div class="head">
+      <h2>Same tokens, native widgets</h2>
+      <span class="tag">flutter</span>
+      <span class="cls">flutter/apple_ui_kit</span>
+    </div>
+    <p class="desc">
+      The Flutter package implements the same design language with the same numbers, so a
+      web prototype and a native build do not drift. 21 widgets, 14 widget tests, no
+      Material dependency.
+    </p>
+    <div class="stage">
+      <dl class="kv">
+        <b>MacWindow</b><span>title bar 38, traffic lights 12/8, radius 10</span>
+        <b>MacSidebar</b><span>sections, items, badges, hover, selection</span>
+        <b>MacButton</b><span>standard / primary / destructive, 22–28 tall</span>
+        <b>MacSwitch</b><span>38 × 22, accent when on</span>
+        <b>IosGlass</b><span>BackdropFilter 28 + tint + 0.5 hairline, clipped</span>
+        <b>IosSwitch</b><span>51 × 31, thumb 27</span>
+        <b>IosSegmentedControl</b><span>34 tall, glass track, sliding thumb</span>
+        <b>IosTabBar</b><span>56 tall, floating capsule</span>
+        <b>IosSheet</b><span>radius 34, grabber 36 × 5, drag to dismiss</span>
+      </dl>
+      <p class="hint"><a href="../flutter/apple_ui_kit/README.md" style="color:var(--cyan)">flutter/apple_ui_kit/README.md</a> · <code>flutter test</code> → 14 passed</p>
+    </div>
+  </section>
+</main>
+
+<footer class="bot">
+  <div class="wrap">
+    Aurora UI components — MIT.
+    Fontshare faces are fetched, never vendored (ITF Free Font Licence);
+    Vazirmatn is OFL 1.1; Clash Display and the mono are ITF Free Font (fetched, not redistributed). Design language referenced from Apple's
+    public HIG and the community Figma kits; no Apple asset is included.
+    <a href="../README.md">README</a> · <a href="../SKILL.md">SKILL.md</a>
+  </div>
+</footer>
+
+<script type="module">
+  import { boot } from './components/island.js';
+  import { bootControls } from './components/controls.js';
+
+  // Every [data-island] on the page, grouped so `data-island-group` stays in sync.
+  const islands = boot(document, { intro: false });
+
+  // The intro plays once, then dies on first touch (see island.js#playIntro).
+  islands.forEach((island) => island.playIntro());
+
+  // controls ship their own behaviour
+  bootControls();
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('[data-magnet]').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      if (reduce) return;
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) * 0.3;
+      const dy = (e.clientY - (r.top + r.height / 2)) * 0.35;
+      el.style.transform = `translate3d(${dx}px,${dy}px,0) scale(1.04)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+
+  document.querySelectorAll('[data-tilt]').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      if (reduce) return;
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(700px) rotateY(${(px * 8).toFixed(2)}deg) rotateX(${(-py * 8).toFixed(2)}deg)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+
+  document.querySelectorAll('[data-count]').forEach((el) => {
+    const target = Number(el.dataset.count) || 0;
+    const suffix = el.dataset.suffix || '';
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        if (reduce) { el.textContent = target + suffix; return; }
+        const start = performance.now();
+        const tick = (now) => {
+          const t = Math.min(1, (now - start) / 1100);
+          el.textContent = Math.round(target * (1 - Math.pow(1 - t, 3))) + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.5 });
+    io.observe(el);
+  });
+
+  // reveal-on-scroll, the component-layer utility
+  document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('in'));
+</script>
+</body>
+</html>

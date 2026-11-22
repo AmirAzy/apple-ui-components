@@ -1,0 +1,25 @@
+# Fontshare faces are licensed for use, not redistribution.
+# Run `python3 scripts/fetch-fonts.py` to get them.
+assets/fonts/*.woff2
+assets/fonts/*.woff
+
+# tooling
+node_modules/
+test/node_modules
+package-lock.json
+*.bundle
+.DS_Store
+
+# local captures
+_shot-*.png
+_sec-*.png
+_repo-*.png
+_show-*.png
+
+# Flutter
+flutter/apple_ui_kit/.dart_tool/
+flutter/apple_ui_kit/build/
+flutter/apple_ui_kit/.flutter-plugins*
+flutter/apple_ui_kit/pubspec.lock
+flutter/apple_ui_kit/example/.dart_tool/
+flutter/apple_ui_kit/example/build/

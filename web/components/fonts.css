@@ -1,0 +1,111 @@
+/* Self-hosted fonts. Nothing here comes from a CDN.
+ *
+ * Vazirmatn (OFL 1.1) is committed under assets/fonts-licensed/.
+ * The Fontshare faces are downloaded by scripts/fetch-fonts.py: the ITF Free
+ * Font Licence allows use, not redistribution. Without them every stack falls
+ * back to a system font and the components still work.
+ */
+
+@font-face{
+  font-family:'Vazirmatn';
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url('../../assets/fonts-licensed/vazirmatn-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Clash Display';
+  font-style:normal;
+  font-weight:200 700;
+  font-display:swap;
+  src:url('../../assets/fonts/clash-display-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Satoshi';
+  font-style:normal;
+  font-weight:300 900;
+  font-display:swap;
+  src:url('../../assets/fonts/satoshi-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Azeret Mono';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('../../assets/fonts/azeret-mono-400.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Cabinet Grotesk';
+  font-style:normal;
+  font-weight:100 900;
+  font-display:swap;
+  src:url('../../assets/fonts/cabinet-grotesk-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Boska';
+  font-style:normal;
+  font-weight:300 900;
+  font-display:swap;
+  src:url('../../assets/fonts/boska-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Gambetta';
+  font-style:normal;
+  font-weight:300 800;
+  font-display:swap;
+  src:url('../../assets/fonts/gambetta-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Zodiak';
+  font-style:normal;
+  font-weight:300 800;
+  font-display:swap;
+  src:url('../../assets/fonts/zodiak-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'General Sans';
+  font-style:normal;
+  font-weight:200 700;
+  font-display:swap;
+  src:url('../../assets/fonts/general-sans-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Bespoke Sans';
+  font-style:normal;
+  font-weight:300 800;
+  font-display:swap;
+  src:url('../../assets/fonts/bespoke-sans-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Melodrama';
+  font-style:normal;
+  font-weight:300 700;
+  font-display:swap;
+  src:url('../../assets/fonts/melodrama-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Sentient';
+  font-style:normal;
+  font-weight:300 700;
+  font-display:swap;
+  src:url('../../assets/fonts/sentient-var.woff2') format('woff2-variations');
+}
+
+@font-face{
+  font-family:'Tanker';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('../../assets/fonts/tanker-400.woff2') format('woff2-variations');
+}

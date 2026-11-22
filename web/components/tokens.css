@@ -1,0 +1,58 @@
+/* Design tokens for the component layer.
+ * Override any of these on :root (or a scope) to re-theme every component.
+ * The same numbers exist in the Flutter kit as AppleMetrics/AppleColorSet.
+ */
+
+/* ─────────────────────────────────────────────────────────────
+   Tokens. Sizes and radii are the same numbers as the Flutter kit
+   (AppleMetrics): card 26, sheet 34, switch 51×31, row 52, blur 28.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  --ink:#08080a;
+  --ink-2:#0e0e12;
+  --paper:#f4f3ef;
+  --text:#f2f1ee;
+  --text-dim:rgba(242,241,238,.62);
+  --text-faint:rgba(242,241,238,.38);
+  --line:rgba(255,255,255,.1);
+  --line-soft:rgba(255,255,255,.06);
+  --glass:rgba(255,255,255,.055);
+  --glass-strong:rgba(255,255,255,.1);
+  --violet:#7c3aed;
+  --cyan:#22d3ee;
+  --lime:#a3e635;
+  --green:#34c759;
+  --pink:#f472b6;
+
+  --r-card:26px;
+  --r-sheet:34px;
+  --r-ctrl:12px;
+  --r-pill:999px;
+
+  --t-fast:180ms;
+  --t-base:260ms;
+  --t-slow:420ms;
+  --t-slower:560ms;
+  --spring:cubic-bezier(.34,1.42,.64,1);
+  --ease-out:cubic-bezier(.22,.61,.36,1);
+
+  --fa:"Vazirmatn","IRANSansX",-apple-system,"SF Pro Text","Segoe UI",Tahoma,"Geeza Pro",sans-serif;
+  --en:"Clash Display",-apple-system,"Segoe UI",sans-serif;
+  --ui:"Satoshi",-apple-system,"Segoe UI",sans-serif;
+  --mono:"Azeret Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --pad:clamp(20px,4.4vw,64px);
+  --maxw:1180px;
+}
+
+/* Shared base: components must not depend on a reset beyond this. */
+*,*::before,*::after{box-sizing:border-box}
+/* the UA button face (#efefef) leaks through otherwise and turns .seg white */
+button{
+  font:inherit;color:inherit;background:none;border:0;margin:0;
+  -webkit-appearance:none;appearance:none;cursor:pointer;
+}
+button:disabled{cursor:not-allowed}
+:where(.island,.glass-panel,.macwin) :focus-visible{
+  outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px;
+}

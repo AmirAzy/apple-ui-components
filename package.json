@@ -1,0 +1,33 @@
+{
+  "name": "apple-ui-components",
+  "version": "1.0.0",
+  "description": "Dependency-free Apple-flavoured UI components for web, with a matching Flutter package sharing one token scale.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./island.js": "./web/components/island.js",
+    "./controls.js": "./web/components/controls.js",
+    "./tokens.css": "./web/components/tokens.css",
+    "./components.css": "./web/components/components.css",
+    "./fonts.css": "./web/components/fonts.css"
+  },
+  "files": [
+    "web/components",
+    "references",
+    "assets/fonts-licensed",
+    "LICENSES.md"
+  ],
+  "scripts": {
+    "test": "node test/dom-check.mjs",
+    "serve": "python3 -m http.server 8000",
+    "fonts": "python3 scripts/fetch-fonts.py"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  },
+  "keywords": ["ui", "components", "dynamic-island", "glassmorphism", "ios", "macos", "flutter", "design-tokens"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AmirAzy/apple-ui-components.git"
+  }
+}

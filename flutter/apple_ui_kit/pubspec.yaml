@@ -1,0 +1,17 @@
+name: apple_ui_kit
+description: >-
+  Flutter components that follow the macOS Big Sur (11) and iOS/iPadOS 27 design
+  languages: window chrome, sidebars, toolbars, glass surfaces, sheets and controls.
+version: 0.1.0
+repository: https://example.com/apple_ui_kit
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
