@@ -53,6 +53,7 @@ grey card. Blur is the `--glass-blur` token (28 px).
 ## iOS controls — switch, segmented, buttons, search, slider
 
 ![iOS controls: switch, segmented control, buttons, search field and slider](screenshots/controls.png)
+![iOS switch and segmented control, live](screenshots/ios-controls.png)
 
 | Component | Markup | Size | Flutter twin |
 |---|---|---|---|

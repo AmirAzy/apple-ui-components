@@ -33,7 +33,8 @@
 
 ۲۱ اکسپورت، شامل `IosGlass` ،`IosSwitch` ،`IosSheet` ،`IosNavBar` ،`IosTabBar` ،`MacWindow` ،`MacSidebar` ،`MacSlider` و بقیه — با یک صفحه‌ی نمونه و ۱۴ تست ویجتی. جزئیات کامل در [`flutter/apple_ui_kit/README.md`](flutter/apple_ui_kit/README.md) است.
 
-![کنترل‌های iOS: سوییچ، سگمنتد، دکمه، جست‌وجو و اسلایدر](docs/screenshots/controls.png)
+![دکمه‌ها، جست‌وجو، اسلایدر و تب‌بار](docs/screenshots/controls.png)
+![سوییچ و سگمنتد iOS](docs/screenshots/ios-controls.png)
 ![پنجره‌ی macOS](docs/screenshots/macos-window.png)
 
 ---

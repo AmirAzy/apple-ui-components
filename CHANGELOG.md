@@ -5,6 +5,14 @@ follow SemVer.
 
 ## [Unreleased]
 
+### Changed
+
+- **Screenshots:** retaken at higher detail from the live showcase — full
+  sections with headings, live states and code snippets, at 2× resolution
+  (island expanded, liquid glass, buttons/search/slider/tab bar, macOS
+  window). Added a fifth shot, `ios-controls.png`, showing the switch and
+  segmented control live; README and `docs/components.md` link to it.
+
 ## [1.1.0] — 2026-11-23
 
 ### Added
