@@ -26,8 +26,9 @@
 برای اینکه ادعا با واقعیت جور باشد: هیچ لایه یا نام لایه‌ای از فایل اصلی در
 کد نیست. آنچه هست، پیاده‌سازی فلاتری همان طراحی است.
 
-اگر روزی فایل `document.json` واقعی را داشتی (توکن Figma + فایل duplicate‌شده)،
-ابزار `../figma2flutter` همین را از خودِ فایل بیرون می‌کشد.
+> توجه: در نسخه‌ی قبلی این فایل به ابزاری به نام `figma2flutter` اشاره شده
+> بود که در این ریپو وجود ندارد؛ آن جمله حذف شد تا سند با واقعیت ریپو جور
+> باشد.
 
 ## نصب و استفاده
 
@@ -172,20 +173,19 @@ segmented control، کشیدن اسلایدر، ساخت هر کامپوننت �
 
 ## دموی وب
 
-`demo-web/` خروجی `flutter build web --release` است (canvaskit محلی، بدون CDN):
+دموی وبِ این پکیج همان `web/showcase.html` در ریشه‌ی ریپو است — نسخه‌ی
+HTML/CSS همان کامپوننت‌ها، با همان توکن‌ها. اگر خواستی خودِ ویجت‌های فلاتر
+را در مرورگر ببینی:
 
 ```bash
 cd example
 flutter create --platforms=web .   # اگر پوشه‌ی web/ نبود
-flutter build web --release
-cp -r build/web/* ../demo-web/
-python3 -m http.server 8090 --directory ../demo-web
+flutter run -d chrome
 ```
 
-دموی زنده در همین workspace روی پورت ۸۰۹۰ سرو می‌شود. تصویرِ رندرشده را من
-خودم ندیده‌ام (در sandbox مرورگر/headless Chromium نیست)؛ چیزی که بررسی شده:
-بیلد موفق، سرو شدن `index.html`/`main.dart.js`/`canvaskit.wasm` با کد ۲۰۰، و
-۱۴ تست ویجتی که 실제 build و layout را اجرا می‌کنند.
+> توجه: در نسخه‌ی قبلی این فایل گفته شده بود پوشه‌ی `demo-web/` در ریپو
+> هست و بیلد آماده‌ی وب را نگه می‌دارد؛ آن پوشه در ریپو نیست و جمله حذف
+> شد.
 
 ## ساختار
 
@@ -197,7 +197,6 @@ lib/src/macos/                 # window، toolbar، sidebar، button، segmented
 lib/src/ios/                   # glass، nav_bar، tab_bar، list، switch،
                                # segmented_control، button، search_field، sheet
 example/                       # اپ نمایشی (مک + iOS روی یک صفحه)
-demo-web/                      # بیلد وب آماده به سرو
 test/                          # ۱۴ تست ویجتی
 ```
 

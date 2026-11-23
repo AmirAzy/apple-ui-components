@@ -6,21 +6,23 @@ Four files, in the order you link them:
 <link rel="stylesheet" href="components/fonts.css">     <!-- 13 @font-face, all local -->
 <link rel="stylesheet" href="components/tokens.css">    <!-- the design scale -->
 <link rel="stylesheet" href="components/components.css"> <!-- the components -->
-<script type="module" src="components/boot.js"></script> <!-- island + controls -->
 ```
 
-(There is no `boot.js`: call `boot()` and `bootControls()` yourself, or copy that
-two-line file from `showcase.html`. Explicit is better than a magic auto-runner.)
+There is no `boot.js`: call `boot()` and `bootControls()` yourself, or copy
+those two lines from `showcase.html`. Explicit is better than a magic
+auto-runner. (Earlier versions of this file said "Four files" and listed a
+`boot.js` in the snippet — the snippet was aspirational; the code never had
+one.)
 
 ## What is in each file
 
 | file | contents | lines |
 |---|---|---|
-| `tokens.css` | `:root` scale — colour, radii, durations, font stacks, `box-sizing` reset, focus ring | 52 |
-| `fonts.css` | 13 `@font-face` rules pointing at `../../assets/fonts*/` | 100 |
-| `components.css` | island, glass, iOS switch + segmented, macOS window, reveal utility | 248 |
-| `island.js` | `DynamicIsland`, `boot()` — the five-state machine | 200 |
-| `controls.js` | `bootSwitch`, `bootSegmented`, `bootControls()` | 120 |
+| `tokens.css` | `:root` scale — colour, radii, durations, font stacks, `box-sizing` reset, focus ring | 59 |
+| `fonts.css` | 13 `@font-face` rules pointing at `../../assets/fonts*/` | 111 |
+| `components.css` | island, glass, iOS switch + segmented, buttons, search, slider, tab bar, badge, toast, macOS window, reveal utility | ~400 |
+| `island.js` | `DynamicIsland`, `boot()` — the five-state machine | 196 |
+| `controls.js` | `bootSwitch`, `bootSegmented`, `bootSearch`, `bootSlider`, `bootToast`, `bootControls()` | 183 |
 
 No dependencies, no build step, no CSS-in-JS. The JS is two ES modules with named
 exports; nothing runs until you call `boot()` / `bootControls()`.
@@ -35,6 +37,14 @@ exports; nothing runs until you call `boot()` / `bootControls()`.
 | `.glass-row` | a 52 px settings row inside a panel | no |
 | `.sw` | iOS 27 switch, 51 × 31 | yes — `bootControls()` |
 | `.seg` + `.thumb` | segmented control with a measured thumb | yes |
+| `.btn` (+ `-filled` / `-tinted` / `-plain` / `-destructive`, `-sm` / `-lg`) | iOS buttons, 44 tall | no |
+| `.macbtn` | macOS push button, 24 tall | no |
+| `.search` + `.s-clear` | search field, 36 tall | yes — clear button |
+| `input.slider` | slider, 28 px thumb, `--fill` gradient | yes — fill sync |
+| `.tabbar` + `.tabbar-item` | floating tab bar, 56 tall | no |
+| `.badge` | numeric / dot badge | no |
+| `.toast` + `[data-toast-show]` | bottom-centre toast, auto-hides | yes |
+| `.iosnav` | large-title nav bar | no |
 | `.macwin` + `.macbar` / `.macsidebar` / `.macrow` | macOS 11 window chrome | no |
 | `[data-reveal]` + `--d` | reveal on scroll with a 45 ms stagger | IO observer, ~10 lines |
 

@@ -124,6 +124,43 @@ tabs[1].dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
 ok('segmented control selects',
   tabs[1].getAttribute('aria-selected') === 'true' && tabs[0].getAttribute('aria-selected') === 'false');
 
+console.log('new components (v1.1)');
+const btns = [...document.querySelectorAll('.btn')];
+ok('buttons exist in four styles',
+  btns.length >= 6 &&
+  ['btn-filled', 'btn-tinted', 'btn-plain', 'btn-destructive'].every((c) =>
+    document.querySelector(`.btn.${c}`)));
+ok('macOS buttons exist',
+  Boolean(document.querySelector('.macbtn')) && Boolean(document.querySelector('.macbtn-primary')));
+
+const search = document.querySelector('.search');
+const searchInput = search.querySelector('input');
+searchInput.value = 'midnight';
+searchInput.dispatchEvent(new window.Event('input', { bubbles: true }));
+ok('search shows its clear button when there is text', search.classList.contains('has-value'));
+search.querySelector('.s-clear').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+ok('search clear empties the field', searchInput.value === '' && !search.classList.contains('has-value'));
+
+const slider = document.querySelector('input.slider[type="range"]');
+ok('slider exists with a fill', Boolean(slider) && slider.style.getPropertyValue('--fill').startsWith('62'));
+slider.value = '20';
+slider.dispatchEvent(new window.Event('input', { bubbles: true }));
+ok('slider fill follows the value', slider.style.getPropertyValue('--fill').startsWith('20'));
+
+const tabItems = [...document.querySelectorAll('.tabbar-item')];
+ok('tab bar has four items', tabItems.length === 4);
+ok('tab bar badge shows a count',
+  document.querySelector('.tabbar .badge')?.textContent.trim() === '3');
+ok('large-title nav bar exists',
+  document.querySelector('.iosnav .n-title')?.textContent.trim() === 'Library');
+
+const toastBtn = document.querySelector('[data-toast-show]');
+const toast = document.querySelector('.toast[data-toast]');
+toastBtn.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+ok('toast shows with the button message',
+  toast.classList.contains('show') &&
+  toast.querySelector('[data-toast-text]').textContent.includes('Added to your library'));
+
 console.log('tokens');
 ok('tokens.css defines the shared scale',
   /--r-card:26px/.test(html) === false); // tokens live in the file, not the page

@@ -17,11 +17,13 @@ the API next to it. It is an example of the kit, not the kit.
 | path | what it is |
 |---|---|
 | `web/components/tokens.css` | the whole design scale: colour, radii, durations, stacks |
-| `web/components/components.css` | island, glass, iOS controls, macOS window, reveal |
+| `web/components/components.css` | island, glass, iOS controls, buttons, search, slider, tab bar, badge, toast, macOS window, reveal |
 | `web/components/fonts.css` | 13 `@font-face`, all local |
 | `web/components/island.js` | `DynamicIsland` + `boot()` — the five-state machine |
-| `web/components/controls.js` | `bootSwitch`, `bootSegmented`, `bootControls()` |
+| `web/components/controls.js` | `bootSwitch`, `bootSegmented`, `bootSearch`, `bootSlider`, `bootToast`, `bootControls()` |
 | `web/showcase.html` | the demo page (self-contained, Persian-safe fonts) |
+| `docs/components.md` | component catalogue with real screenshots |
+| `docs/screenshots/` | screenshots taken from the actual web components |
 | `flutter/apple_ui_kit/` | Flutter package: 21 exports (22 widget classes), `example/`, 14 tests |
 | `references/island-spec.md` | five states, exact sizes, DOM contract, a11y |
 | `references/glass.md` | liquid-glass recipe, cost, why it looked wrong at first |
@@ -52,7 +54,7 @@ the API next to it. It is an example of the kit, not the kit.
   import { boot } from './components/island.js';
   import { bootControls } from './components/controls.js';
   boot();            // upgrades every [data-island], wires [data-island-state]
-  bootControls();    // upgrades every .sw and .seg on the page
+  bootControls();    // upgrades every .sw, .seg, .search, .slider and .toast on the page
 </script>
 ```
 

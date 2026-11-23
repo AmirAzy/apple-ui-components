@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#08080a">
-<title>Aurora UI components — web kit</title>
-<meta name="description" content="Web components for cross-platform apps: a five-state dynamic island, liquid glass surfaces, iOS 27 controls and a macOS window — token-driven, dependency-free, 60fps.">
+<title>Apple UI Components — web kit</title>
+<meta name="description" content="Web components for cross-platform apps: a five-state dynamic island, liquid glass surfaces, iOS 27 controls, buttons, search, slider, tab bar and a macOS window — token-driven, dependency-free, 60fps.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2308080a'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%2322d3ee'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="components/fonts.css">
 <link rel="stylesheet" href="components/tokens.css">
@@ -142,11 +142,12 @@ footer.bot a:hover{color:var(--text)}
 
 <header class="top">
   <div class="wrap">
-    <span class="logo"><span class="dot"></span>Aurora UI</span>
+    <span class="logo"><span class="dot"></span>Apple UI</span>
     <nav>
       <a href="#island">Island</a>
       <a href="#glass">Glass</a>
       <a href="#controls">Controls</a>
+      <a href="#more">More</a>
       <a href="#macos">macOS</a>
       <a href="#motion">Motion</a>
       <a href="../flutter/apple_ui_kit/README.md">Flutter</a>
@@ -159,8 +160,9 @@ footer.bot a:hover{color:var(--text)}
   <section class="intro">
     <h1>Web components for cross-platform apps</h1>
     <p>
-      Four components, one token file, no dependencies: a five-state dynamic island,
-      liquid-glass surfaces, the iOS 27 controls and a macOS 11 window. The same
+      One token file, no dependencies: a five-state dynamic island,
+      liquid-glass surfaces, the iOS 27 controls, buttons, search, slider,
+      tab bar and a macOS 11 window. The same
       numbers drive the Flutter widgets in <code>flutter/apple_ui_kit</code>, so a web
       prototype and a native build stay in step.
     </p>
@@ -336,6 +338,81 @@ footer.bot a:hover{color:var(--text)}
     </div>
   </section>
 
+  <!-- ─────────────────────  more controls  ───────────────────── -->
+  <section class="comp-block" id="more">
+    <div class="head">
+      <h2>Buttons, search, slider, tab bar</h2>
+      <span class="tag">new in v1.1</span>
+      <span class="cls">.btn · .search · .slider · .tabbar · .badge · .toast</span>
+    </div>
+    <p class="desc">
+      The pieces every screen needs after the hero components: iOS buttons in
+      four styles, a search field with a clear button, a slider, a floating
+      tab bar with badges, and a toast. They mirror <code>IosButton</code>,
+      <code>IosSearchField</code>, <code>MacSlider</code> and
+      <code>IosTabBar</code> in the Flutter kit, and they all work with
+      <code>bootControls()</code> — no extra wiring.
+    </p>
+    <div class="stage">
+      <div class="iosnav">
+        <p class="n-sub">Tuesday, 23 November</p>
+        <h3 class="n-title">Library</h3>
+      </div>
+      <div class="stage-row">
+        <button class="btn btn-filled" type="button">Play</button>
+        <button class="btn btn-tinted" type="button">Add to Library</button>
+        <button class="btn" type="button">Share</button>
+        <button class="btn btn-plain" type="button">Edit</button>
+        <button class="btn btn-destructive" type="button">Delete</button>
+        <button class="btn btn-sm" type="button">Small</button>
+      </div>
+      <div class="two">
+        <div>
+          <div class="search">
+            <span class="s-ico" aria-hidden="true">⌕</span>
+            <input type="search" placeholder="Search songs, albums, artists" aria-label="Search">
+            <button class="s-clear" type="button" aria-label="Clear search">✕</button>
+          </div>
+          <p class="hint">Type something — the ✕ appears, and clears the field.</p>
+          <div style="margin-top:18px">
+            <label for="vol" style="font-size:.82rem;color:var(--text-dim)">Volume</label>
+            <input type="range" class="slider" id="vol" min="0" max="100" value="62" aria-label="Volume">
+          </div>
+        </div>
+        <div>
+          <div class="tabbar" role="tablist" aria-label="Demo tab bar">
+            <button class="tabbar-item" role="tab" aria-selected="true"><span class="t-ico">♪</span>Listen</button>
+            <button class="tabbar-item" role="tab" aria-selected="false"><span class="t-ico">▦</span>Browse<span class="badge">3</span></button>
+            <button class="tabbar-item" role="tab" aria-selected="false"><span class="t-ico">◐</span>Radio</button>
+            <button class="tabbar-item" role="tab" aria-selected="false"><span class="t-ico">▤</span>Library</button>
+          </div>
+          <p class="hint">Badges: <span class="badge">3</span> <span class="badge badge-quiet">12</span> <span class="badge badge-dot" aria-label="Unread"></span></p>
+          <div class="row-actions" style="margin-top:14px">
+            <button class="btn btn-sm" type="button" data-toast-show data-toast-message="Added to your library ✦">Show a toast</button>
+            <button class="macbtn" type="button">macOS button</button>
+            <button class="macbtn macbtn-primary" type="button">Primary</button>
+          </div>
+        </div>
+      </div>
+      <pre class="snippet"><code><span class="k">&lt;button</span> class=<span class="s">"btn btn-filled"</span><span class="k">&gt;</span>Play<span class="k">&lt;/button&gt;</span>
+<span class="k">&lt;button</span> class=<span class="s">"btn btn-tinted"</span><span class="k">&gt;</span>Add to Library<span class="k">&lt;/button&gt;</span>
+<span class="k">&lt;button</span> class=<span class="s">"btn btn-destructive"</span><span class="k">&gt;</span>Delete<span class="k">&lt;/button&gt;</span>
+
+<span class="k">&lt;div</span> class=<span class="s">"search"</span><span class="k">&gt;</span>
+  <span class="k">&lt;span</span> class=<span class="s">"s-ico"</span><span class="k">&gt;</span>⌕<span class="k">&lt;/span&gt;</span>
+  <span class="k">&lt;input</span> type=<span class="s">"search"</span> placeholder=<span class="s">"Search…"</span><span class="k">&gt;</span>
+  <span class="k">&lt;button</span> class=<span class="s">"s-clear"</span> aria-label=<span class="s">"Clear search"</span><span class="k">&gt;</span>✕<span class="k">&lt;/button&gt;</span>
+<span class="k">&lt;/div&gt;</span>
+
+<span class="k">&lt;input</span> type=<span class="s">"range"</span> class=<span class="s">"slider"</span> min=<span class="s">"0"</span> max=<span class="s">"100"</span> value=<span class="s">"62"</span><span class="k">&gt;</span>
+
+<span class="k">&lt;!-- toast: one per page, shown by any [data-toast-show] --&gt;</span>
+<span class="k">&lt;div</span> class=<span class="s">"toast"</span> data-toast role=<span class="s">"status"</span><span class="k">&gt;</span>
+  <span class="k">&lt;span</span> class=<span class="s">"t-ico"</span><span class="k">&gt;</span>✦<span class="k">&lt;/span&gt;</span><span class="k">&lt;span</span> data-toast-text<span class="k">&gt;&lt;/span&gt;</span>
+<span class="k">&lt;/div&gt;</span></code></pre>
+    </div>
+  </section>
+
   <!-- ─────────────────────  macos  ───────────────────── -->
   <section class="comp-block" id="macos">
     <div class="head">
@@ -442,9 +519,11 @@ footer.bot a:hover{color:var(--text)}
   </section>
 </main>
 
+<div class="toast" data-toast role="status"><span class="t-ico">✦</span><span data-toast-text></span></div>
+
 <footer class="bot">
   <div class="wrap">
-    Aurora UI components — MIT.
+    Apple UI Components — MIT.
     Fontshare faces are fetched, never vendored (ITF Free Font Licence);
     Vazirmatn is OFL 1.1; Clash Display and the mono are ITF Free Font (fetched, not redistributed). Design language referenced from Apple's
     public HIG and the community Figma kits; no Apple asset is included.

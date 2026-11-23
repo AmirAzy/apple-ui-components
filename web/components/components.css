@@ -122,8 +122,8 @@
   position:relative;border-radius:var(--r-sheet);padding:22px;
   background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.16);
-  backdrop-filter:blur(28px) saturate(1.5);
-  -webkit-backdrop-filter:blur(28px) saturate(1.5);
+  backdrop-filter:blur(var(--glass-blur)) saturate(1.5);
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5);
   box-shadow:0 24px 60px -24px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.35);
   overflow:hidden;
 }
@@ -240,6 +240,140 @@
   100%{border-radius:38% 62% 52% 48%/42% 58% 38% 62%;transform:rotate(-16deg) scale(.96)}
 }
 
+/* ── buttons ───────────────────────────────────────────────── */
+/* iOS 27 buttons, mirroring IosButton in Flutter: filled / tinted /
+   plain / destructive. One height scale, one radius, no framework. */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  height:44px;padding:0 20px;border-radius:14px;
+  font-family:var(--ui);font-size:.92rem;font-weight:600;line-height:1;
+  color:var(--text);background:rgba(255,255,255,.12);
+  border:.5px solid rgba(255,255,255,.16);
+  cursor:pointer;user-select:none;-webkit-user-select:none;
+  transition:background var(--t-fast) linear,transform var(--t-fast) var(--spring),opacity var(--t-fast) linear;
+}
+.btn:hover{background:rgba(255,255,255,.18)}
+.btn:active{transform:scale(.97)}
+.btn-filled{background:#fff;color:#08080a;border-color:transparent}
+.btn-filled:hover{background:rgba(255,255,255,.86)}
+.btn-tinted{background:rgba(34,211,238,.14);color:#8be9ff;border-color:rgba(34,211,238,.28)}
+.btn-tinted:hover{background:rgba(34,211,238,.22)}
+.btn-plain{background:transparent;border-color:transparent;color:var(--cyan)}
+.btn-plain:hover{background:rgba(34,211,238,.1)}
+.btn-destructive{background:#ff453a;color:#fff;border-color:transparent}
+.btn-destructive:hover{background:#ff5a4e}
+.btn-sm{height:34px;padding:0 14px;font-size:.8rem;border-radius:11px}
+.btn-lg{height:52px;padding:0 26px;font-size:1rem;border-radius:16px}
+.btn:disabled,.btn[aria-disabled="true"]{opacity:.4;cursor:not-allowed;transform:none}
+.btn .b-ico{font-size:1rem;line-height:1}
+
+/* macOS push button, mirroring MacButton: 22–28 tall, 6 px radius */
+.macbtn{
+  display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 11px;
+  border-radius:6px;font-family:var(--ui);font-size:.76rem;color:var(--text);
+  background:rgba(255,255,255,.1);border:.5px solid rgba(255,255,255,.14);
+  cursor:pointer;transition:background var(--t-fast) linear;
+}
+.macbtn:hover{background:rgba(255,255,255,.16)}
+.macbtn-primary{background:#0a84ff;border-color:transparent;color:#fff}
+.macbtn-primary:hover{background:#2f95ff}
+.macbtn-destructive{background:#ff453a;border-color:transparent;color:#fff}
+
+/* ── search field ──────────────────────────────────────────── */
+/* iOS search field, mirroring IosSearchField: 36 tall, 10 px radius,
+   icon + clear button. The clear button only shows when there is text. */
+.search{
+  display:flex;align-items:center;gap:8px;height:36px;padding:0 10px;
+  border-radius:10px;background:rgba(255,255,255,.08);
+  border:.5px solid rgba(255,255,255,.08);
+  transition:border-color var(--t-fast) linear,background var(--t-fast) linear;
+}
+.search:focus-within{border-color:rgba(34,211,238,.55);background:rgba(255,255,255,.1)}
+.search .s-ico{color:var(--text-faint);font-size:.9rem;flex:0 0 auto}
+.search input{
+  flex:1;min-width:0;border:0;background:none;outline:none;
+  font:inherit;font-size:.88rem;color:var(--text);
+}
+.search input::placeholder{color:var(--text-faint)}
+.search .s-clear{
+  display:none;width:20px;height:20px;border-radius:50%;flex:0 0 auto;
+  background:rgba(255,255,255,.22);color:#08080a;font-size:.7rem;line-height:1;
+  place-items:center;cursor:pointer;
+}
+.search.has-value .s-clear{display:grid}
+
+/* ── slider ────────────────────────────────────────────────── */
+/* iOS / macOS slider, mirroring MacSlider: 28 px thumb, 6 px track.
+   The fill is a gradient driven by --fill (0–100%), set by controls.js. */
+.slider{
+  -webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;
+  --fill:50%;cursor:pointer;
+}
+.slider::-webkit-slider-runnable-track{
+  height:6px;border-radius:3px;
+  background:linear-gradient(90deg,#fff var(--fill),rgba(255,255,255,.2) var(--fill));
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-11px;
+  border-radius:50%;background:#fff;border:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+  transition:transform var(--t-fast) var(--spring);
+}
+.slider::-webkit-slider-thumb:hover{transform:scale(1.08)}
+.slider::-moz-range-track{height:6px;border-radius:3px;background:rgba(255,255,255,.2)}
+.slider::-moz-range-progress{height:6px;border-radius:3px;background:#fff}
+.slider::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:#fff;border:0;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+
+/* ── tab bar ───────────────────────────────────────────────── */
+/* Floating iOS tab bar, mirroring IosTabBar: 56 tall capsule, glass. */
+.tabbar{
+  display:inline-flex;align-items:center;gap:2px;padding:6px;border-radius:999px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(var(--glass-blur)) saturate(1.5);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5);
+  box-shadow:0 16px 40px -16px rgba(0,0,0,.8);
+}
+.tabbar-item{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:64px;padding:7px 12px 6px;border-radius:999px;
+  font-family:var(--ui);font-size:.62rem;color:var(--text-dim);
+  transition:background var(--t-base) var(--spring),color var(--t-fast) linear;
+}
+.tabbar-item .t-ico{font-size:1.05rem;line-height:1}
+.tabbar-item[aria-selected="true"]{background:rgba(255,255,255,.14);color:#fff;font-weight:700}
+.tabbar-item .badge{position:absolute;top:2px;inset-inline-end:8px}
+
+/* ── badge ─────────────────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;padding:0 6px;border-radius:999px;
+  background:#ff453a;color:#fff;font-family:var(--mono);font-size:.62rem;font-weight:700;
+}
+.badge-dot{width:8px;height:8px;min-width:8px;padding:0;border-radius:50%}
+.badge-quiet{background:rgba(255,255,255,.16);color:var(--text)}
+
+/* ── toast ─────────────────────────────────────────────────── */
+/* One toast at a time, bottom-centre. JS adds .show; it removes itself. */
+.toast{
+  position:fixed;left:50%;bottom:28px;z-index:60;
+  transform:translate(-50%,16px);opacity:0;pointer-events:none;
+  display:flex;align-items:center;gap:10px;max-width:min(92vw,480px);
+  padding:12px 16px;border-radius:14px;
+  background:rgba(28,28,30,.92);border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 18px 44px -12px rgba(0,0,0,.85);
+  font-size:.86rem;color:var(--text);
+  transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--spring);
+}
+.toast.show{transform:translate(-50%,0);opacity:1;pointer-events:auto}
+.toast .t-ico{color:var(--cyan)}
+
+/* ── iOS nav bar ───────────────────────────────────────────── */
+/* Large-title nav bar, mirroring IosNavBar: 34 pt title, inline subtitle. */
+.iosnav{padding:8px 4px 4px}
+.iosnav .n-sub{font-size:.78rem;color:var(--text-faint);margin:0 0 2px}
+.iosnav .n-title{margin:0;font-size:2.1rem;line-height:1.15;font-weight:700;letter-spacing:-.02em}
+.iosnav .n-actions{display:flex;gap:8px;margin-top:10px}
+
 /* ── media ─────────────────────────────────────────────────── */
 @media (max-width:760px){
   .macbody{min-height:210px}
@@ -256,7 +390,8 @@
 /* prefers-reduced-motion: keep the states, drop the movement */
 @media (prefers-reduced-motion:reduce){
   .island,.island .layer,.wave i,.eq i,.pulse,.bar-fill,
-  .sw,.sw::after,.seg .thumb,[data-reveal]{
+  .sw,.sw::after,.seg .thumb,[data-reveal],
+  .btn,.tabbar-item,.toast,.slider::-webkit-slider-thumb{
     animation-duration:.001ms!important;animation-iteration-count:1!important;
     transition-duration:.001ms!important;
   }

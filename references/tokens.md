@@ -5,55 +5,72 @@ is the same table in Dart. Change a number in one place and change it in the oth
 in the same commit, or the two halves drift and nobody notices until a designer
 puts the screenshots side by side.
 
+> Honest note: this table lists only the variables that actually exist in
+> `tokens.css`. Earlier versions of this file named variables (`--ios-card-r`,
+> `--mac-win-r`, `--ease-spring`, …) that were never defined — the sizes lived
+> as literals in `components.css`. Those names are gone from this doc; if a
+> size needs a token, add it to `tokens.css` first, then list it here.
+
 ## The scale
 
 | CSS variable | value | Flutter | used by |
 |---|---|---|---|
-| `--t-fast` | 180 ms | `AppleDuration.fast` | switch, hover |
-| `--t-base` | 260 ms | `AppleDuration.base` | island compact↔expanded |
-| `--t-slow` | 420 ms | `AppleDuration.slow` | sheets, nav |
-| `--t-slower` | 560 ms | `AppleDuration.slower` | island expanded→idle |
-| `--ease-spring` | `cubic-bezier(.34,1.42,.64,1)` | `AppleCurves.spring` | anything that "pops" |
-| `--ease-out` | `cubic-bezier(.22,.61,.36,1)` | `AppleCurves.out` | reveals |
-| `--stagger` | 45 ms | `AppleDuration.stagger` | list reveals, capped at 8 |
-| `--mac-win-r` | 10 px | `MacMetrics.windowRadius` | window |
-| `--mac-bar-h` | 38 px | `MacMetrics.titleBar` | title bar |
-| `--mac-dot` / `--mac-dot-gap` | 12 / 8 px | `MacMetrics.traffic` / `.trafficGap` | traffic lights |
-| `--ios-card-r` | 26 px | `AppleMetrics.cardRadius` | inset group |
-| `--ios-sheet-r` | 34 px | `AppleMetrics.sheetRadius` | sheet, island expanded |
-| `--ios-sw-w` / `--ios-sw-h` | 51 × 31 | `AppleMetrics.switchWidth` / `.switchHeight` | switch |
-| `--ios-tab-h` | 56 px | `AppleMetrics.tabBarHeight` | tab bar |
-| `--ios-row-h` | 52 px | `AppleMetrics.rowHeight` | list row |
+| `--r-card` | 26 px | `AppleMetrics.cardRadius` | inset group, glass panel |
+| `--r-sheet` | 34 px | `AppleMetrics.sheetRadius` | sheet, island expanded |
+| `--r-ctrl` | 12 px | `AppleMetrics.controlRadius` (6 px) | small controls — see note |
+| `--r-pill` | 999 px | — | pills, island, segmented |
 | `--glass-blur` | 28 px | `AppleMetrics.glassBlur` | every glass pane |
-| `--pad` | `clamp(20px,4.4vw,64px)` | `AppleMetrics.gutter(context)` | section gutters |
-| `--maxw` | 1180 px | `AppleMetrics.maxWidth` | content column |
+| `--t-fast` | 180 ms | `AppleMetrics.fast` (160 ms) | switch, hover |
+| `--t-base` | 260 ms | `AppleMetrics.normal` (260 ms) | island compact↔expanded |
+| `--t-slow` | 420 ms | `AppleMetrics.sheet` (380 ms) | sheets, nav |
+| `--t-slower` | 560 ms | — | island expanded→idle |
+| `--spring` | `cubic-bezier(.34,1.42,.64,1)` | — | anything that "pops" |
+| `--ease-out` | `cubic-bezier(.22,.61,.36,1)` | — | reveals |
+| `--pad` | `clamp(20px,4.4vw,64px)` | — | section gutters |
+| `--maxw` | 1180 px | — | content column |
+
+Sizes that are still literals in `components.css` (no CSS variable yet), with
+their Flutter counterpart: island 124×35 / 216×38 / 344×126 / 322×62 / 300×56,
+switch 51×31 (`AppleMetrics.iosSwitchWidth/Height`, thumb 27), tab bar 56
+(`iosTabBarHeight`), list row 52 (`iosRowHeight`), macOS window radius 10
+(`windowRadius`), title bar 38 (`windowTitleBarHeight`), traffic lights 12
+with an 8 px gap (`trafficLightSize/Gap`), macOS switch 38×22
+(`macSwitchWidth/Height`).
+
+**Known drift:** web durations (180 / 420 / 560 ms) and Flutter durations
+(160 / 380 ms) do not match yet, and `--r-ctrl` (12 px) is not the same number
+as Flutter's `controlRadius` (6 px). Both are listed here so the next pass can
+align them instead of discovering them by eye.
 
 ## Island geometry (CSS-only, no token needed)
 
 | state | size | radius |
 |---|---|---|
-| idle | 124 × 35 | 30 |
-| compact | 216 × 38 | 30 |
+| idle | 124 × 35 | pill |
+| compact | 216 × 38 | pill |
 | expanded | 344 × 126 | 34 |
 | notif | 322 × 62 | 26 |
-| call | 300 × 56 | 26 |
+| call | 300 × 56 | pill |
 
 Mobile (`≤760 px`): widths clamp to `min(…, var(--island-max, 100vw - 24px))`,
 expanded height 138, cover art 52 px.
 
 ## Type
 
-Two stacks, deliberately:
+Three stacks, deliberately:
 
-- `--ui` — the interface face: Clash Display → system UI. Latin only.
-- `--mono` — JetBrains-style mono for code and token names.
-- Persian is never in `--ui`: it goes in `--fa` (Vazirmatn, OFL, committed at
-  `assets/fonts-licensed/`). Mixing scripts in a Latin face is the one visual bug
-  this kit refuses to ship.
+- `--fa` — Vazirmatn, for Persian / Arabic script. Persian is never in `--ui`.
+- `--en` — Clash Display, for Latin display text.
+- `--ui` — Satoshi, the interface face. Latin only.
+- `--mono` — Azeret Mono, for code and token names.
+
+Mixing scripts in a Latin face is the one visual bug this kit refuses to ship.
 
 ## Colour
 
-Dark surface scale in `tokens.css` (`--bg`, `--bg-2`, `--fg`, `--fg-2`, `--fg-3`,
-`--line`, `--accent`). Flutter mirrors it as `AppleColorSet.dark` / `.light`; every
-widget takes the set it should use. No global mutable theme, no `Theme.of(context)`
-lookups in the leaf widgets.
+Dark surface scale in `tokens.css`: `--ink` / `--ink-2` (backgrounds),
+`--text` / `--text-dim` / `--text-faint`, `--line` / `--line-soft`,
+`--glass` / `--glass-strong`, accents `--violet` / `--cyan` / `--lime` /
+`--green` / `--pink`. Flutter mirrors it as `AppleColorSet.dark` / `.light`;
+every widget takes the set it should use. No global mutable theme, no
+`Theme.of(context)` lookups in the leaf widgets.
